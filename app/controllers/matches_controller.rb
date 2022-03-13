@@ -6,10 +6,9 @@ class MatchesController < ApplicationController
     @match = Match.new(match_params)
 
     if @match.save
-      @winner = Player.find_by(first_name: params[:match_details]['winner_name'].split(" ")[0], last_name: params[:match_details]['winner_name'].split(" ")[1])
-      @loser = Player.find_by(first_name: params[:match_details]['loser_name'].split(" ")[0], last_name: params[:match_details]['loser_name'].split(" ")[1])
+      find_players
       @match.update_player_scores(@winner,@loser)
-      render json: @match, status: :created, location: @match
+      render json: @match.format_match(@winner.id, @loser.id), status: :created, location: @match
     else
       render json: @match.errors, status: :unprocessable_entity
     end
@@ -37,6 +36,13 @@ class MatchesController < ApplicationController
 
   def user_is_registered(full_name)
     !Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0],full_name.split(' ')[1]).empty?
+  end
+
+  def find_players
+    winner_full_name = params[:match_details]['winner_name'].split(" ")
+    loser_full_name = params[:match_details]['loser_name'].split(" ")
+    @winner = Player.find_by(first_name: winner_full_name[0], last_name: winner_full_name[1])
+    @loser = Player.find_by(first_name: loser_full_name[0], last_name: loser_full_name[1])
   end
 
 

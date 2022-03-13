@@ -42,7 +42,7 @@ RSpec.describe MatchesController, type: :controller do
       post :create,
            params: { match_details: { winner_id: '1', winner_name: 'John Jones', loser_id: '2',
                                       loser_name: 'Joan Johnson' } }
-      expect(response.body).to eq("2")
+      expect(response.body).to include("{\"match ID\":1,\"winner name\":\"John Jones\",\"loser name\":\"Joan Johnson\",\"winner rating\":880,\"winner rank\":\"Unranked\",\"winner global ranking\":1,\"loser rating\":720,\"loser rank\":\"Unranked\",\"loser global ranking\":2,\"")
     end
   end
 end

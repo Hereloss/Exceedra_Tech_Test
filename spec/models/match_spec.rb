@@ -11,9 +11,8 @@ RSpec.describe Match, type: :model do
 
   context 'formats match data' do
     it 'will format the match data correctly upon being asked' do
-   
-      expect(@match.format_match(winner.id,
-                                 loser.id)).to eq({"match ID"=>nil, "winner name"=>"John Jones", "loser name"=>"Joan Johnson", "winner rating"=>880, "winner rank"=>"Unranked", "winner global ranking"=>"1", "loser rating"=>720, "loser rank"=>"None", "loser global ranking"=>"2", "played at"=>nil})
+      expect(@match.format_match(@winner.id,
+                                 @loser.id)).to eq({"match ID"=>nil, "winner name"=>"John Jones", "loser name"=>"Joan Johnson", "winner rating"=>800, "winner rank"=>"Unranked", "winner global ranking"=> 1, "loser rating"=>800, "loser rank"=>"None", "loser global ranking"=> 1, "played at"=>nil})
     end
   end
 
