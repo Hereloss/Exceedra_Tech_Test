@@ -21,6 +21,7 @@ class PlayersController < ApplicationController
     end
     reason += 'Name is already taken;' if Player.where('first_name = ? and last_name = ?', params[:player_details]['first_name'],
                                                                            params[:player_details]['last_name']).empty? == false
+    reason += 'Under age limit;' if (2022 - (params[:player_details]['dob'].split('-')[2]).to_i) < 16
     unless reason == ''
       render json: { "created": 'fail', "reason": reason }, status: :unprocessable_entity
       false
