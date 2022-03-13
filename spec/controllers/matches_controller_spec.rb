@@ -14,5 +14,11 @@ RSpec.describe MatchesController, type: :controller do
       post :create, params: { match_details: { loser_name: 'bill' } }
       expect(response).to have_http_status(422)
     end
+
+    it 'will return error if either player in JSON is not registered' do
+      post :create,
+           params: { match_details: { winner_id: '1', winner_name: 'bill j', loser_id: '2', loser_name: 'pete g' } }
+      expect(response).to have_http_status(422)
+    end
   end
 end
