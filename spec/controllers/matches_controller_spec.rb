@@ -7,5 +7,12 @@ RSpec.describe MatchesController, type: :controller do
       post :create
       expect(response).to have_http_status(422)
     end
+
+    it 'will return error if JSON is in wrong format or incomplete' do
+      post :create, params: { match_details: { winner_name: 'bill' } }
+      expect(response).to have_http_status(422)
+      post :create, params: { match_details: { loser_name: 'bill' } }
+      expect(response).to have_http_status(422)
+    end
   end
 end
