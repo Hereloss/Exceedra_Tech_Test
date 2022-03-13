@@ -18,7 +18,25 @@ RSpec.describe PlayersController, type: :controller do
       expect(response).to have_http_status(422)
     end
 
-    it 'will register a player if no error raised and return JSON' do
+    it 'will return error if JSON is in wrong format or incomplete' do
+      post :create, params: { player_details: { first_name: 'bob' } }
+      expect(response).to have_http_status(422)
+      post :create, params: { player_details: { last_name: 'bob' } }
+      expect(response).to have_http_status(422)
+      post :create, params: { player_details: { first_name: 'bob', last_name: 'bob' } }
+      expect(response).to have_http_status(422)
+      post :create, params: { player_details: { first_name: 'bob', last_name: 'bob', dob: '23-12-1996' } }
+      expect(response).to have_http_status(422)
+      post :create,
+           params: { player_details: { first_name: 'bob', last_name: 'bob', dob: '23-92-1996', nationality: 'Bobonite' } }
+      expect(response).to have_http_status(422)
+      post :create, params: { player_details: { first_name: 'bob', last_name: 'bob', nationality: 'Bobonite' } }
+      expect(response).to have_http_status(422)
+      post :create, params: { player_details: { first_name: '', last_name: '', nationality: '', dob: '23-12-1996' } }
+      expect(response).to have_http_status(422)
+    end
+
+    it 'will register a player if no error raised' do
       post :create,
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
                                      nationality: 'Bobonite' } }
