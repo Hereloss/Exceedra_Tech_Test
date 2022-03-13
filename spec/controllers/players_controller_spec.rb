@@ -59,7 +59,7 @@ RSpec.describe PlayersController, type: :controller do
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
                                      nationality: 'Bobonite' } }
       expect(response).to have_http_status(201)
-      expect(response.body).to include('Jonny', 'Jones', '23-12-1996', 'Bobonite')
+      expect(response.body).to include('Jonny', 'Jones', '25', 'Bobonite')
     end
 
     it 'will register a player and set their values to default even if given' do
@@ -67,7 +67,7 @@ RSpec.describe PlayersController, type: :controller do
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996', nationality: 'Bob',
                                      rating: '1200', rank: 'Gold' } }
       expect(response).to have_http_status(201)
-      expect(response.body).to include('Jonny', 'Jones', 'Bob', '1200', 'Unranked')
+      expect(response.body).to include('Jonny', 'Jones', 'Bob', '1200', 'Unranked','25')
     end
 
     it 'will return the correctly formatted JSON after registering' do
@@ -75,7 +75,8 @@ RSpec.describe PlayersController, type: :controller do
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
                                      nationality: 'Bobonite' } }
       expect(response).to have_http_status(201)
-      expect(response.body).to include('Jonny', 'Jones', '23-12-1996', 'Bobonite')
+      p response.body
+      expect(response.body).to eq("{\"current position\":null,\"full name\":\"Jonny Jones\",\"age\":25,\"nationality\":\"Bobonite\",\"rank name\":\"Unranked\",\"points\":1200}")
     end
 
   end
