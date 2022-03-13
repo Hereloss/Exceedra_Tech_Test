@@ -35,11 +35,9 @@ GET /players?search_type=rank&rank = x : searches for users in the given rank
 POST ENDPOINTS:
 
 POST /players with JSON {user_details {first_name, last_name, nationality, dob, rating}} : creates new user with following details. Will send back error if fails or duplicates
-eg. curl "localhost:3000/players" -X POST -H "Content-Type: application/json" -d '{"player_details": {"first_name":"bill","last_name":"batson","dob":"23-09-1996","nationality":"American"}}'
+eg. curl "localhost:3000/players" -X POST -H "Content-Type: application/json" -d '{"player_details": {"first_name":"bill","last_name":"banson","dob":"23-09-1996","nationality":"American"}}'
 eg. curl "localhost:3000/players" -X POST -H "Content-Type: application/json" -d '{"player_details": {"first_name":"John","last_name":"Jones","dob":"23-09-1996","nationality":"American"}}'
 eg. curl "localhost:3000/players" -X POST -H "Content-Type: application/json" -d '{"player_details": {"first_name":"James","last_name":"Jones","dob":"23-09-1996","nationality":"American"}}'
 
 POST /matches with JSON {match_details {winner_id, winner_name,loser_id,loser_name}}: Creates a new match and fixes players scores accordingly
 eg. curl "localhost:3000/matches" -X POST -H "Content-Type: application/json" -d '{"match_details": {"winner_id":"2","winner_name":"John Jones","loser_id":"3","loser_name":"James Jones"}}'
-
-NOTE: Uppercase and lowercase defaults should be considered!

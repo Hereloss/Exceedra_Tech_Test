@@ -24,12 +24,6 @@ RSpec.describe PlayersController, type: :controller do
       expect(response.body).not_to include('Jonny', 'British', '1500', 'Bronze')
     end
 
-    it 'will return all players above those points if search type is points' do
-      get :index, params: { search_type: 'points', points: '1300' }
-      expect(response.body).to include('Jonny', 'Jones', 'British', '1500', 'Bronze')
-      expect(response.body).not_to include('John', 'Scottish', '800', 'Unranked', '2')
-    end
-
     it 'will return filtered by nationality if search type is nationality' do
       get :index, params: { search_type: 'nationality', nationality: 'Welsh' }
       expect(response.body).not_to include('John', 'Jonny', 'Jones', 'Scottish',
