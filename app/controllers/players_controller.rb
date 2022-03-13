@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlayersController < ApplicationController
   def index
     search_players_database
@@ -9,10 +11,7 @@ class PlayersController < ApplicationController
     return false if blank_json == true
     return false if able_to_sign_up == false
 
-    params[:player_details]["first_name"].capitalize!
-    params[:player_details]["last_name"].capitalize!
-    params[:player_details]["nationality"].capitalize!
-
+    make_params_capital
     @player = Player.new(player_params)
 
     if @player.save
@@ -28,7 +27,8 @@ class PlayersController < ApplicationController
     previous_player_score = 0
 
     Player.all.order('rating DESC').each do |player_row|
-      array = player_row.change_player_global_ranking(previous_global_rank, repeats_of_previous_rank , previous_player_score)
+      array = player_row.change_player_global_ranking(previous_global_rank, repeats_of_previous_rank,
+                                                      previous_player_score)
       previous_global_rank = array[0]
       repeats_of_previous_rank = array[1]
       previous_player_score = array[2]
@@ -42,24 +42,18 @@ class PlayersController < ApplicationController
   def search_players_database
     unless params[:search_type].blank?
       case params[:search_type].downcase
-      when 'points'
-        @players = Player.where('rating > ?', params[:points])
       when 'nationality'
-        @players = Player.where('nationality == ?', params[:nationality].capitalize)
+        return @players = Player.where('nationality == ?', params[:nationality].capitalize)
       when 'rank'
-        @players = Player.where('rank == ?', params[:rank].capitalize)
-      else
-        @players = Player.all
-        @type = 'all'
+        return @players = Player.where('rank == ?', params[:rank].capitalize)
       end
-    else
-      @players = Player.all
-      @type = 'all'
     end
+    @players = Player.all
+    @type = 'all'
   end
 
   def set_type_and_order_found_players
-    @type = params[:search_type] if params[:search_type] == ('nationality' || 'points' || 'rank')
+    @type = params[:search_type] if params[:search_type] == ('nationality' || 'rank')
     PlayersController.recalculate_global_rankings
     @players = @players.order(Arel.sql("`rank` != 'Unranked' desc, rating DESC"))
   end
@@ -76,20 +70,21 @@ class PlayersController < ApplicationController
     if params[:player_details].nil?
       render json: { "created": 'fail', "reason": 'Blank JSON sent' },
              status: :unprocessable_entity
-      return true
+      true
     end
   end
 
   def able_to_sign_up
-    reason = ""
+    reason = ''
     if incomplete_information == true
-      render json: { "created": 'fail', "reason": "Missing or incorrect sign up information;" }, status: :unprocessable_entity
+      render json: { "created": 'fail', "reason": 'Missing or incorrect sign up information;' },
+             status: :unprocessable_entity
       return false
     end
     reason += 'Name is already taken;' if Player.where('first_name = ? and last_name = ?', params[:player_details]['first_name'],
-                                                                           params[:player_details]['last_name']).empty? == false
+                                                       params[:player_details]['last_name']).empty? == false
     reason += 'Under age limit;' if (2022 - (params[:player_details]['dob'].split('-')[2]).to_i) < 16
-    unless reason == ""
+    unless reason == ''
       render json: { "created": 'fail', "reason": reason }, status: :unprocessable_entity
       false
     end
@@ -107,15 +102,21 @@ class PlayersController < ApplicationController
 
   def blank_details_in_json
     if params[:player_details]['first_name'].blank? || params[:player_details]['last_name'].blank? ||
-      params[:player_details]['nationality'].blank? || params[:player_details]['dob'].blank?
-     return true
-   end
+       params[:player_details]['nationality'].blank? || params[:player_details]['dob'].blank?
+      true
+    end
+  end
+
+  def make_params_capital
+    params[:player_details]['first_name'].capitalize!
+    params[:player_details]['last_name'].capitalize!
+    params[:player_details]['nationality'].capitalize!
   end
 
   def save_player
-      @player.format_json_updates
-      player_start_position = PlayersController.recalculate_global_rankings(@player)
-      render json: @player.player_format(player_start_position), status: :created, location: @player
+    @player.format_json_updates
+    player_start_position = PlayersController.recalculate_global_rankings(@player)
+    render json: @player.player_format(player_start_position), status: :created, location: @player
   end
 
   def player_params

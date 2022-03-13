@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Player, type: :model do
   before(:each) do
     @player = Player.new(first_name: 'Jonny', last_name: 'Jones', dob: '23-09-1987', nationality: 'British',
-                     rating: '1500', matchesplayed: '4', rank: 'Bronze', globalranking: '1')
+                         rating: '1500', matchesplayed: '4', rank: 'Bronze', globalranking: '1')
   end
 
   context 'Update self after match' do

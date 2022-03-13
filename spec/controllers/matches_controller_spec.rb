@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'rails_helper'
 
@@ -23,9 +25,9 @@ RSpec.describe MatchesController, type: :controller do
 
     it 'will return error if either player id doesnt match player' do
       Player.create(first_name: 'John', last_name: 'Jones', dob: '23-09-1987', nationality: 'Scottish',
-                            rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
+                    rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
       Player.create(first_name: 'Joan', last_name: 'Johnson', dob: '23-09-1987', nationality: 'Scottish',
-                           rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
+                    rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
       post :create,
            params: { match_details: { winner_id: '1', winner_name: 'Joan Johnson', loser_id: '2',
                                       loser_name: 'John Jones' } }
@@ -38,9 +40,9 @@ RSpec.describe MatchesController, type: :controller do
 
     it 'will record match and update scores if both players registered' do
       Player.create(first_name: 'John', last_name: 'Jones', dob: '23-09-1987', nationality: 'Scottish',
-                            rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
+                    rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
       Player.create(first_name: 'Joan', last_name: 'Johnson', dob: '23-09-1987', nationality: 'Scottish',
-                           rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
+                    rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
       post :create,
            params: { match_details: { winner_id: 1, winner_name: 'John Jones', loser_id: 2,
                                       loser_name: 'Joan Johnson' } }
@@ -51,13 +53,13 @@ RSpec.describe MatchesController, type: :controller do
 
     it 'will return the results in the correct format' do
       Player.create(first_name: 'John', last_name: 'Jones', dob: '23-09-1987', nationality: 'Scottish',
-                            rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
+                    rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
       Player.create(first_name: 'Joan', last_name: 'Johnson', dob: '23-09-1987', nationality: 'Scottish',
-                           rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
+                    rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
       post :create,
            params: { match_details: { winner_id: 1, winner_name: 'John Jones', loser_id: 2,
                                       loser_name: 'Joan Johnson' } }
-      expect(response.body).to include("{\"match ID\":1,\"winner name\":\"John Jones\",\"loser name\":\"Joan Johnson\",\"winner rating\":880,\"winner rank\":\"Unranked\",\"winner global ranking\":1,\"loser rating\":720,\"loser rank\":\"Unranked\",\"loser global ranking\":2,\"")
+      expect(response.body).to include('{"match ID":1,"winner name":"John Jones","loser name":"Joan Johnson","winner rating":880,"winner rank":"Unranked","winner global ranking":1,"loser rating":720,"loser rank":"Unranked","loser global ranking":2,"')
     end
   end
 end
