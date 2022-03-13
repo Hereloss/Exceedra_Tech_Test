@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Match, type: :model do
+  before(:each) do
+    @match = Match.new({ winner_id: '1', winner_name: 'John Jones', loser_id: '2', loser_name: 'Joan Johnson' })
+  end
   context 'asks players to update scores' do
     before(:each) do
       @winner = Player.create(first_name: 'John', last_name: 'Jones', dob: '23-09-1987', nationality: 'Scottish',

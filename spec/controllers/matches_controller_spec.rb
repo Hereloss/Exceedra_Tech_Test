@@ -30,7 +30,8 @@ RSpec.describe MatchesController, type: :controller do
            params: { match_details: { winner_id: '1', winner_name: 'John Jones', loser_id: '2',
                                       loser_name: 'Joan Johnson' } }
       expect(response).to have_http_status(201)
-      expect(response.body).to include('880', '720')
+      expect(Player.find(1).rating).to eq(880)
+      expect(Player.find(2).rating).to eq(720)
     end
   end
 end

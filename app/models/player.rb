@@ -48,4 +48,13 @@ class Player < ApplicationRecord
     end
   end
 
+  def update_rating_after_match(win, loser_rating = 0)
+    if win == true
+      update('rating': (rating.to_i + (loser_rating * 0.1).floor).to_s,
+             'matchesplayed': (matchesplayed.to_i + 1).to_s)
+    else
+      update('rating': (rating.to_i * 0.9).ceil.to_s, 'matchesplayed': (matchesplayed.to_i + 1).to_s)
+    end
+  end
+
 end

@@ -6,6 +6,9 @@ class MatchesController < ApplicationController
     @match = Match.new(match_params)
 
     if @match.save
+      @winner = Player.find_by(first_name: params[:match_details]['winner_name'].split(" ")[0], last_name: params[:match_details]['winner_name'].split(" ")[1])
+      @loser = Player.find_by(first_name: params[:match_details]['loser_name'].split(" ")[0], last_name: params[:match_details]['loser_name'].split(" ")[1])
+      @match.update_player_scores(@winner,@loser)
       render json: @match, status: :created, location: @match
     else
       render json: @match.errors, status: :unprocessable_entity
