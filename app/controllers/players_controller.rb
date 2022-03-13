@@ -26,7 +26,7 @@ class PlayersController < ApplicationController
     repeats_of_previous_rank = 0
     previous_player_score = 0
 
-    Player.all.order('rating DESC').each do |player_row|
+    Player.all.order('points DESC').each do |player_row|
       array = player_row.change_player_global_ranking(previous_global_rank, repeats_of_previous_rank,
                                                       previous_player_score)
       previous_global_rank = array[0]
@@ -55,7 +55,7 @@ class PlayersController < ApplicationController
   def set_type_and_order_found_players
     @type = params[:search_type] if params[:search_type] == ('nationality' || 'rank')
     PlayersController.recalculate_global_rankings
-    @players = @players.order(Arel.sql("`rank` != 'Unranked' desc, rating DESC"))
+    @players = @players.order(Arel.sql("`rank` != 'Unranked' desc, points DESC"))
   end
 
   def format

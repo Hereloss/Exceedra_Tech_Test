@@ -5,24 +5,24 @@ require 'rails_helper'
 RSpec.describe Player, type: :model do
   before(:each) do
     @player = Player.new(first_name: 'Jonny', last_name: 'Jones', dob: '23-09-1987', nationality: 'British',
-                         rating: '1500', matchesplayed: '4', rank: 'Bronze', globalranking: '1')
+                         points: '1500', matchesplayed: '4', rank: 'Bronze', globalranking: '1')
   end
 
   context 'Update self after match' do
-    it 'will add to its rating if the player wins by a pre-determined amount' do
-      @player.update_rating_after_match(true, 800)
-      expect(@player.rating).to eq(1580)
+    it 'will add to its points if the player wins by a pre-determined amount' do
+      @player.update_points_after_match(true, 800)
+      expect(@player.points).to eq(1580)
     end
-    it 'will lower its rating if the player loses to 90% of previous value' do
-      @player.update_rating_after_match(false)
-      expect(@player.rating).to eq(1350)
+    it 'will lower its points if the player loses to 90% of previous value' do
+      @player.update_points_after_match(false)
+      expect(@player.points).to eq(1350)
     end
   end
 
   context 'Format own data' do
     it 'will update the values to default start values upon being registered' do
       @player.format_json_updates
-      expect(@player.rating).to eq(1200)
+      expect(@player.points).to eq(1200)
       expect(@player.rank).to eq('Unranked')
       expect(@player.matchesplayed).to eq(0)
     end
@@ -39,7 +39,7 @@ RSpec.describe Player, type: :model do
   end
 
   context 'Calculate Global Ranking' do
-    it 'will recalculate its global rank and return i. j and its current rating' do
+    it 'will recalculate its global rank and return the current global ranking its on, how many have been on that and its points' do
       @player.update("globalranking": 2)
       @player.change_player_global_ranking(0, 0, 0)
       expect(@player.globalranking).to eq(1)
@@ -61,19 +61,19 @@ RSpec.describe Player, type: :model do
     end
 
     it 'will recalulate its rank to the correct rank if over 3 matches played' do
-      @player.update("rating": '500')
+      @player.update("points": '500')
       @player.recalculate_player_rank
       expect(@player.rank).to eq('Bronze')
-      @player.update("rating": '10001')
+      @player.update("points": '10001')
       @player.recalculate_player_rank
       expect(@player.rank).to eq('Supersonic Legend')
-      @player.update("rating": '6000')
+      @player.update("points": '6000')
       @player.recalculate_player_rank
       expect(@player.rank).to eq('Gold')
-      @player.update("rating": '4000')
+      @player.update("points": '4000')
       @player.recalculate_player_rank
       expect(@player.rank).to eq('Silver')
-      @player.update("rating": '500')
+      @player.update("points": '500')
       @player.recalculate_player_rank
       expect(@player.rank).to eq('Bronze')
     end

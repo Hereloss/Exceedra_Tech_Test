@@ -27,7 +27,7 @@ You are the president of the local Tennis Club. Your responsibilities include ma
 - The loser gives the winner 10% of his points from before the match (rounded down).  
 
 For example:
-- if Luca (1000 points) wins a match against Brendan (900 points), Luca should end up with 1090 points after the game and Brendan with 810.
+- If Luca (1000 points) wins a match against Brendan (900 points), Luca should end up with 1090 points after the game and Brendan with 810.
 - If Daniel (700 points) wins a match against James (1200 points), Daniel should end up with 820 points after the game and James with 1080.
 
 The business logic behind calculating new player scores after a match should be unit-tested.
@@ -71,7 +71,7 @@ I would like to recieve back confirmation of successful sign up
 
 As a user,  
 So I start on an even playing field,  
-I would like the rating to default to 1200 upon signing up
+I would like the points to default to 1200 upon signing up
 
 As a user,  
 So I can get a good start in the club,  
@@ -99,7 +99,7 @@ I would like an error to be raised if the details are incorrect or incomplete
 
 As a user,  
 So I have accurate results on how good I am,  
-I would like my rating and rank to update after a game
+I would like my points and rank to update after a game
 
 As a user,  
 So my games are kept track of accurately,  
@@ -107,7 +107,7 @@ I would like matches against non-club members to raise errors and not count
 
 As a user,  
 So I know my game was accurately recorded,  
-I would like to see confirmation of the match and mine and my opponets new rating and rank
+I would like to see confirmation of the match and mine and my opponets new points and rank
 
 ### Process
 
@@ -136,7 +136,7 @@ Players, with columns:
 - dob
 - created_at
 - updated_at
-- rating
+- points
 - rank
 - globalranking
 - matchesplayed  
@@ -165,7 +165,7 @@ Lists all users, or searched for users depending on the params added. You can se
 
 ### POST /players
 Will register a new player with the club. This endpoint must be accompanied with a JSON with at minimum specific information or it will not register and return an error. The JSON must be in the following format:  
-**{user_details {first_name, last_name, nationality, dob, rating}}**  
+**{user_details {first_name, last_name, nationality, dob}}**  
 
 If any of the above details are missing, an error will be returned. If the DOB is in the wrong format, the player is too young or the name is already taken an error will also be returned as a 422 error. 
 
