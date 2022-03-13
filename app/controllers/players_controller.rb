@@ -1,6 +1,13 @@
 class PlayersController < ApplicationController
   def index
-    @players = Player.all
+    case params[:search_type]
+    when 'rank'
+      @players = Player.where('rank == ?', params[:rank])
+    else
+      @players = Player.all
+      @type = 'all'
+    end
+    @type = params[:search_type] if params[:search_type] == ('rank')
     render json: format, status: :found
   end
 
