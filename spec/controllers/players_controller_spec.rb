@@ -15,7 +15,7 @@ RSpec.describe PlayersController, type: :controller do
     it 'will respond with JSON of all players if no params given' do
       get :index
       expect(response).to have_http_status(302)
-      expect(response.body).to eq("[{\"current position\":2,\"full name\":\"John Jones\",\"age\":44,\"nationality\":\"Scottish\",\"rank name\":\"Unranked\",\"points\":800},{\"current position\":1,\"full name\":\"Jonny Jones\",\"age\":34,\"nationality\":\"British\",\"rank name\":\"Bronze\",\"points\":1500}]")
+      expect(response.body).to eq("[{\"current position\":1,\"full name\":\"Jonny Jones\",\"age\":34,\"nationality\":\"British\",\"rank name\":\"Bronze\",\"points\":1500},{\"current position\":2,\"full name\":\"John Jones\",\"age\":44,\"nationality\":\"Scottish\",\"rank name\":\"Unranked\",\"points\":800}]")
     end
 
     it 'will return filtered by rank if search type is rank' do
@@ -43,6 +43,17 @@ RSpec.describe PlayersController, type: :controller do
       get :index, params: { search_type: 'job' }
       expect(response.body).to include('John', 'Jonny', 'Jones', 'Scottish', 'British', '800',
                                        '1500', 'Unranked', 'Bronze', '1', '2')
+    end
+
+    it 'will sort the players into the correct order and present them in point order, unranked at the bottom' do
+      Player.create(first_name: 'John', last_name: 'Bobson', dob: '23-09-1977', nationality: 'Scottish', rating: '1000',
+                  matchesplayed: '3', rank: 'Bronze', globalranking: '3')
+      Player.create(first_name: 'Jonny', last_name: 'Bobson', dob: '23-09-1987', nationality: 'British', rating: '1900',
+                  matchesplayed: '4', rank: 'Bronze', globalranking: '4')
+      Player.create(first_name: 'Jonny', last_name: 'Bobson', dob: '23-09-1987', nationality: 'British', rating: '1900',
+                  matchesplayed: '0', rank: 'Unranked', globalranking: '4')
+      get :index
+      expect(response.body).to eq("[{\"current position\":1,\"full name\":\"Jonny Bobson\",\"age\":34,\"nationality\":\"British\",\"rank name\":\"Bronze\",\"points\":1900},{\"current position\":3,\"full name\":\"Jonny Jones\",\"age\":34,\"nationality\":\"British\",\"rank name\":\"Bronze\",\"points\":1500},{\"current position\":4,\"full name\":\"John Bobson\",\"age\":44,\"nationality\":\"Scottish\",\"rank name\":\"Bronze\",\"points\":1000},{\"current position\":1,\"full name\":\"Jonny Bobson\",\"age\":34,\"nationality\":\"British\",\"rank name\":\"Unranked\",\"points\":1900},{\"current position\":5,\"full name\":\"John Jones\",\"age\":44,\"nationality\":\"Scottish\",\"rank name\":\"Unranked\",\"points\":800}]")
     end
 
   end

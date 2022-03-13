@@ -12,7 +12,7 @@ class PlayersController < ApplicationController
       @type = 'all'
     end
     @type = params[:search_type] if params[:search_type] == ('nationality' || 'points' || 'rank')
-    @players.order(Arel.sql("`rank` != 'Unranked' desc, rating DESC"))
+    @players = @players.order(Arel.sql("`rank` != 'Unranked' desc, rating DESC"))
     render json: format, status: :found
   end
 
