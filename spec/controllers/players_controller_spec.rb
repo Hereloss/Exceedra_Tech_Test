@@ -18,6 +18,14 @@ RSpec.describe PlayersController, type: :controller do
       expect(response).to have_http_status(422)
     end
 
+    it 'will register a player if no error raised and return JSON' do
+      post :create,
+           params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
+                                     nationality: 'Bobonite' } }
+      expect(response).to have_http_status(201)
+      expect(response.body).to include('Jonny', 'Jones', '23-12-1996', 'Bobonite')
+    end
+
   end
 
 end
