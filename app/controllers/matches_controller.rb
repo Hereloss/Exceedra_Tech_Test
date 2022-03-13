@@ -62,7 +62,7 @@ class MatchesController < ApplicationController
   def save_match
     if @match.save
       players = @match.find_players(params[:match_details]['winner_name'].split(' '),
-                                  params[:match_details]['loser_name'].split(' '))
+                                    params[:match_details]['loser_name'].split(' '))
       @match.update_player_scores(players)
       render json: @match.format_match(players), status: :created, location: @match
     else
