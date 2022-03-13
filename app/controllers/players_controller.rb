@@ -12,16 +12,31 @@ class PlayersController < ApplicationController
       @type = 'all'
     end
     @type = params[:search_type] if params[:search_type] == ('nationality' || 'points' || 'rank')
+    PlayersController.recalculate_global_rankings
     @players = @players.order(Arel.sql("`rank` != 'Unranked' desc, rating DESC"))
     render json: format, status: :found
   end
 
   def create
-    return false if blank_json == false
-    return false if unable_to_sign_up == false
+    return false if blank_json == true
+    return false if able_to_sign_up == false
 
     @player = Player.new(player_params)
     save_player
+  end
+
+  def self.recalculate_global_rankings(player = nil)
+    i = 0
+    j = 0
+    previous_player_score = 0
+    Player.all.order('rating DESC').each do |player_row|
+      array = player_row.change_player_global_ranking(i, j, previous_player_score)
+      i = array[0]
+      j = array[1]
+      previous_player_score = array[2]
+      @player_start_position = i if player == player_row
+    end
+    @player_start_position
   end
 
   private
@@ -34,7 +49,7 @@ class PlayersController < ApplicationController
     formatted_array
   end
 
-  def unable_to_sign_up
+  def able_to_sign_up
     reason = ""
     if incomplete_information == true
       render json: { "created": 'fail', "reason": "Missing or incorrect sign up information;" }, status: :unprocessable_entity
@@ -62,7 +77,8 @@ class PlayersController < ApplicationController
   def save_player
     if @player.save
       @player.format_json_updates
-      render json: @player.player_format, status: :created, location: @player
+      player_start_position = PlayersController.recalculate_global_rankings
+      render json: @player.player_format(player_start_position), status: :created, location: @player
     else
       render json: @player.errors, status: :unprocessable_entity
     end
@@ -72,7 +88,7 @@ class PlayersController < ApplicationController
     if params[:player_details].nil?
       render json: { "created": 'fail', "reason": 'Blank JSON sent' },
              status: :unprocessable_entity
-      return false
+      return true
     end
   end
 

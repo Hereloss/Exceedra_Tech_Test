@@ -26,15 +26,15 @@ RSpec.describe Player, type: :model do
 
   context 'Calculate Global Ranking' do
     it 'will recalculate its global rank and return i. j and its current rating' do
-      @user.update("globalranking": '2')
-      @user.change_user_global_ranking(0, 0, 0)
-      expect(@user.globalranking).to eq('1')
-      @user.change_user_global_ranking(1, 0, 1600)
-      expect(@user.globalranking).to eq('2')
-      @user.change_user_global_ranking(1, 1, 1600)
-      expect(@user.globalranking).to eq('3')
-      @user.change_user_global_ranking(1, 1, 1500)
-      expect(@user.globalranking).to eq('1')
+      @player.update("globalranking": 2)
+      @player.change_player_global_ranking(0, 0, 0)
+      expect(@player.globalranking).to eq(1)
+      @player.change_player_global_ranking(1, 0, 1600)
+      expect(@player.globalranking).to eq(2)
+      @player.change_player_global_ranking(1, 1, 1600)
+      expect(@player.globalranking).to eq(3)
+      @player.change_player_global_ranking(1, 1, 1500)
+      expect(@player.globalranking).to eq(1)
     end
   end
 end
