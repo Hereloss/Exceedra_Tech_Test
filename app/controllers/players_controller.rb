@@ -1,19 +1,7 @@
 class PlayersController < ApplicationController
   def index
-    case params[:search_type]
-    when 'points'
-      @players = Player.where('rating > ?', params[:points])
-    when 'nationality'
-      @players = Player.where('nationality == ?', params[:nationality])
-    when 'rank'
-      @players = Player.where('rank == ?', params[:rank])
-    else
-      @players = Player.all
-      @type = 'all'
-    end
-    @type = params[:search_type] if params[:search_type] == ('nationality' || 'points' || 'rank')
-    PlayersController.recalculate_global_rankings
-    @players = @players.order(Arel.sql("`rank` != 'Unranked' desc, rating DESC"))
+    search_players_database
+    set_type_and_order_found_players
     render json: format, status: :found
   end
 
@@ -26,20 +14,41 @@ class PlayersController < ApplicationController
   end
 
   def self.recalculate_global_rankings(player = nil)
-    i = 0
-    j = 0
+    previous_global_rank = 0
+    repeats_of_previous_rank = 0
     previous_player_score = 0
+    
     Player.all.order('rating DESC').each do |player_row|
-      array = player_row.change_player_global_ranking(i, j, previous_player_score)
-      i = array[0]
-      j = array[1]
+      array = player_row.change_player_global_ranking(previous_global_rank, repeats_of_previous_rank , previous_player_score)
+      previous_global_rank = array[0]
+      repeats_of_previous_rank = array[1]
       previous_player_score = array[2]
-      @player_start_position = i if player == player_row
+      @player_start_position = previous_global_rank if player == player_row
     end
     @player_start_position
   end
 
   private
+
+  def search_players_database
+    case params[:search_type]
+    when 'points'
+      @players = Player.where('rating > ?', params[:points])
+    when 'nationality'
+      @players = Player.where('nationality == ?', params[:nationality])
+    when 'rank'
+      @players = Player.where('rank == ?', params[:rank])
+    else
+      @players = Player.all
+      @type = 'all'
+    end
+  end
+
+  def set_type_and_order_found_players
+    @type = params[:search_type] if params[:search_type] == ('nationality' || 'points' || 'rank')
+    PlayersController.recalculate_global_rankings
+    @players = @players.order(Arel.sql("`rank` != 'Unranked' desc, rating DESC"))
+  end
 
   def format
     formatted_array = []
@@ -77,7 +86,7 @@ class PlayersController < ApplicationController
   def save_player
     if @player.save
       @player.format_json_updates
-      player_start_position = PlayersController.recalculate_global_rankings
+      player_start_position = PlayersController.recalculate_global_rankings(@player)
       render json: @player.player_format(player_start_position), status: :created, location: @player
     else
       render json: @player.errors, status: :unprocessable_entity

@@ -17,15 +17,20 @@ class Player < ApplicationRecord
     current_hash
   end
 
-  def change_player_global_ranking(i, j, previous_player_score)
-    i += 1 if i.zero? || ((rating.to_i != previous_player_score) && j.zero?)
-    if (rating.to_i != previous_player_score) && (j != 0)
-      i = i + j + 1
-      j = 0
+  def change_player_global_ranking(previous_global_rank, repeats_of_previous_rank, previous_player_score)
+    first_player = (previous_global_rank.zero?)
+    same_as_previous_player = (rating.to_i == previous_player_score)
+    last_ranking_repeated = (!repeats_of_previous_rank.zero?)
+    player_rank = previous_global_rank
+
+    player_rank += 1 if first_player || ((!same_as_previous_player) && !last_ranking_repeated)
+    if (!same_as_previous_player) && (last_ranking_repeated)
+      player_rank +=  repeats_of_previous_rank + 1
+      repeats_of_previous_rank = 0
     end
-    j += 1 if rating.to_i == previous_player_score
-    update('globalranking': i)
-    [i, j, rating.to_i]
+    repeats_of_previous_rank += 1 if same_as_previous_player
+    update('globalranking': player_rank)
+    [player_rank, repeats_of_previous_rank, rating.to_i]
   end
 
 end

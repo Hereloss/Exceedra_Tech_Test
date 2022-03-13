@@ -121,7 +121,7 @@ RSpec.describe PlayersController, type: :controller do
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
                                      nationality: 'Bobonite' } }
       expect(response).to have_http_status(201)
-      expect(response.body).to eq("{\"current position\":null,\"full name\":\"Jonny Jones\",\"age\":25,\"nationality\":\"Bobonite\",\"rank name\":\"Unranked\",\"points\":1200}")
+      expect(response.body).to eq("{\"current position\":1,\"full name\":\"Jonny Jones\",\"age\":25,\"nationality\":\"Bobonite\",\"rank name\":\"Unranked\",\"points\":1200}")
     end
 
   end
