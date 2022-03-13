@@ -20,7 +20,7 @@ RSpec.describe PlayersController, type: :controller do
 
     it 'will return filtered by rank if search type is rank' do
       get :index, params: { search_type: 'rank', rank: 'Unranked' }
-      expect(response.body).to eq("[{\"current position\":2,\"full name\":\"John Jones\",\"age\":44,\"nationality\":\"Scottish\",\"rank name\":\"Unranked\",\"points\":800}]")
+      expect(response.body).to eq('[{"current position":2,"full name":"John Jones","age":44,"nationality":"Scottish","rank name":"Unranked","points":800}]')
     end
 
     it 'will return filtered by nationality if search type is nationality' do
@@ -28,7 +28,7 @@ RSpec.describe PlayersController, type: :controller do
       expect(response.body).not_to include('John', 'Jonny', 'Jones', 'Scottish',
                                            'British', '800', '1500', 'Unranked', 'Bronze', '1', '2')
       get :index, params: { search_type: 'nationality', nationality: 'Scottish' }
-      expect(response.body).to eq("[{\"current position\":2,\"full name\":\"John Jones\",\"age\":44,\"nationality\":\"Scottish\",\"rank name\":\"Unranked\",\"points\":800}]")
+      expect(response.body).to eq('[{"current position":2,"full name":"John Jones","age":44,"nationality":"Scottish","rank name":"Unranked","points":800}]')
     end
 
     it 'will return all players if search type is none of these' do
@@ -104,7 +104,7 @@ RSpec.describe PlayersController, type: :controller do
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
                                        nationality: 'Bobonite' } }
       expect(response).to have_http_status(201)
-      expect(response.body).to eq("{\"current position\":1,\"full name\":\"Jonny Jones\",\"age\":25,\"nationality\":\"Bobonite\",\"rank name\":\"Unranked\",\"points\":1200}")
+      expect(response.body).to eq('{"current position":1,"full name":"Jonny Jones","age":25,"nationality":"Bobonite","rank name":"Unranked","points":1200}')
     end
 
     it 'will register a player and set their values to default even if given' do
@@ -112,7 +112,7 @@ RSpec.describe PlayersController, type: :controller do
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996', nationality: 'Bob',
                                        points: '1200', rank: 'Gold' } }
       expect(response).to have_http_status(201)
-      expect(response.body).to eq("{\"current position\":1,\"full name\":\"Jonny Jones\",\"age\":25,\"nationality\":\"Bob\",\"rank name\":\"Unranked\",\"points\":1200}")
+      expect(response.body).to eq('{"current position":1,"full name":"Jonny Jones","age":25,"nationality":"Bob","rank name":"Unranked","points":1200}')
     end
 
     it 'will return the correctly formatted JSON after registering' do

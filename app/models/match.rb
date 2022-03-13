@@ -8,7 +8,7 @@ class Match < ApplicationRecord
     loser_full_name = "#{loser.first_name} #{loser.last_name}"
     { 'match ID' => id, 'winner name' => winner_full_name, 'loser name' => loser_full_name,
       'winner points' => winner.points, 'winner rank' => winner.rank, 'winner global ranking' => winner.globalranking,
-      'loser points' => loser.points, 'loser rank' => loser.rank, 'loser global ranking' => loser.globalranking, 
+      'loser points' => loser.points, 'loser rank' => loser.rank, 'loser global ranking' => loser.globalranking,
       'played at' => created_at }
   end
 

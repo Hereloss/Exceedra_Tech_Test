@@ -6,11 +6,7 @@ class MatchesController < ApplicationController
 
     @match = Match.new(match_params)
 
-    if @match.save
-      save_match
-    else
-      render json: @match.errors, status: :unprocessable_entity
-    end
+    save_match
   end
 
   private
@@ -64,10 +60,14 @@ class MatchesController < ApplicationController
   end
 
   def save_match
-    players = @match.find_players(params[:match_details]['winner_name'].split(' '),
+    if @match.save
+      players = @match.find_players(params[:match_details]['winner_name'].split(' '),
                                   params[:match_details]['loser_name'].split(' '))
-    @match.update_player_scores(players)
-    render json: @match.format_match(players), status: :created, location: @match
+      @match.update_player_scores(players)
+      render json: @match.format_match(players), status: :created, location: @match
+    else
+      render json: @match.errors, status: :unprocessable_entity
+    end
   end
 
   def match_params

@@ -13,12 +13,7 @@ class PlayersController < ApplicationController
 
     make_params_capital
     @player = Player.new(player_params)
-
-    if @player.save
-      save_player
-    else
-      render json: @player.errors, status: :unprocessable_entity
-    end
+    save_player
   end
 
   def self.recalculate_global_rankings(player = nil)
@@ -114,9 +109,13 @@ class PlayersController < ApplicationController
   end
 
   def save_player
-    @player.format_json_updates
-    player_start_position = PlayersController.recalculate_global_rankings(@player)
-    render json: @player.player_format(player_start_position), status: :created, location: @player
+    if @player.save
+      @player.format_json_updates
+      player_start_position = PlayersController.recalculate_global_rankings(@player)
+      render json: @player.player_format(player_start_position), status: :created, location: @player
+    else
+      render json: @player.errors, status: :unprocessable_entity
+    end
   end
 
   def player_params
