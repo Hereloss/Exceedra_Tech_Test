@@ -33,5 +33,16 @@ RSpec.describe MatchesController, type: :controller do
       expect(Player.find(1).rating).to eq(880)
       expect(Player.find(2).rating).to eq(720)
     end
+
+    it 'will return the results in the correct format' do
+      Player.create(first_name: 'John', last_name: 'Jones', dob: '23-09-1987', nationality: 'Scottish',
+                            rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
+      Player.create(first_name: 'Joan', last_name: 'Johnson', dob: '23-09-1987', nationality: 'Scottish',
+                           rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
+      post :create,
+           params: { match_details: { winner_id: '1', winner_name: 'John Jones', loser_id: '2',
+                                      loser_name: 'Joan Johnson' } }
+      expect(response.body).to eq("2")
+    end
   end
 end
