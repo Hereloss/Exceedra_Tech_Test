@@ -10,7 +10,12 @@ class PlayersController < ApplicationController
     return false if able_to_sign_up == false
 
     @player = Player.new(player_params)
-    save_player
+
+    if @player.save
+      save_player
+    else
+      render json: @player.errors, status: :unprocessable_entity
+    end
   end
 
   def self.recalculate_global_rankings(player = nil)
@@ -66,13 +71,6 @@ class PlayersController < ApplicationController
     end
   end
 
-  def blank_details_in_json
-    if params[:player_details]['first_name'].blank? || params[:player_details]['last_name'].blank? ||
-      params[:player_details]['nationality'].blank? || params[:player_details]['dob'].blank?
-     return true
-   end
-  end
-
   def able_to_sign_up
     reason = ""
     if incomplete_information == true
@@ -98,14 +96,17 @@ class PlayersController < ApplicationController
     end
   end
 
+  def blank_details_in_json
+    if params[:player_details]['first_name'].blank? || params[:player_details]['last_name'].blank? ||
+      params[:player_details]['nationality'].blank? || params[:player_details]['dob'].blank?
+     return true
+   end
+  end
+
   def save_player
-    if @player.save
       @player.format_json_updates
       player_start_position = PlayersController.recalculate_global_rankings(@player)
       render json: @player.player_format(player_start_position), status: :created, location: @player
-    else
-      render json: @player.errors, status: :unprocessable_entity
-    end
   end
 
   def player_params

@@ -21,6 +21,10 @@ RSpec.describe MatchesController, type: :controller do
       expect(response).to have_http_status(422)
     end
 
+    it 'will return error if either player id doesnt match player' do
+
+    end
+
     it 'will record match and update scores if both players registered' do
       Player.create(first_name: 'John', last_name: 'Jones', dob: '23-09-1987', nationality: 'Scottish',
                             rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
