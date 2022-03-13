@@ -39,6 +39,7 @@ class PlayersController < ApplicationController
 
   def save_player
     if @player.save
+      @player.format_json_updates
       render json: @player, status: :created, location: @player
     else
       render json: @player.errors, status: :unprocessable_entity

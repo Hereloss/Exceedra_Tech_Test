@@ -67,7 +67,7 @@ RSpec.describe PlayersController, type: :controller do
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996', nationality: 'Bob',
                                      rating: '1200', rank: 'Gold' } }
       expect(response).to have_http_status(201)
-      expect(response.body).to include('Jonny', 'Jones', '25', 'Bob', '1200', 'Unranked')
+      expect(response.body).to include('Jonny', 'Jones', 'Bob', '1200', 'Unranked')
     end
 
     it 'will return the correctly formatted JSON after registering' do
