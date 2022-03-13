@@ -5,6 +5,18 @@ RSpec.describe Player, type: :model do
     @player = Player.new(first_name: 'Jonny', last_name: 'Jones', dob: '23-09-1987', nationality: 'British',
                      rating: '1500', matchesplayed: '4', rank: 'Bronze', globalranking: '1')
   end
+
+  context 'Update self after match' do
+    it 'will add to its rating if the player wins by a pre-determined amount' do
+      @player.update_rating_after_match(true, 800)
+      expect(@player.rating).to eq(1580)
+    end
+    it 'will lower its rating if the player loses to 90% of previous value' do
+      @player.update_rating_after_match(false)
+      expect(@player.rating).to eq(1350)
+    end
+  end
+
   context 'Format own data' do
     it 'will update the values to default start values upon being registered' do
       @player.format_json_updates
