@@ -8,7 +8,8 @@ class Match < ApplicationRecord
     loser_full_name = "#{loser.first_name} #{loser.last_name}"
     { 'match ID' => id, 'winner name' => winner_full_name, 'loser name' => loser_full_name,
       'winner rating' => winner.rating, 'winner rank' => winner.rank, 'winner global ranking' => winner.globalranking,
-      'loser rating' => loser.rating, 'loser rank' => loser.rank, 'loser global ranking' => loser.globalranking, 'played at' => created_at }
+      'loser rating' => loser.rating, 'loser rank' => loser.rank, 'loser global ranking' => loser.globalranking, 
+      'played at' => created_at }
   end
 
   def update_player_scores(players)
