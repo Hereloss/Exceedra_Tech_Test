@@ -13,10 +13,17 @@ class PlayersController < ApplicationController
   private
 
   def unable_to_sign_up
+    reason = ""
     if incomplete_information == true
-      reason = 'Missing or incorrect sign up information;'
+      reason += 'Missing or incorrect sign up information;'
       render json: { "created": 'fail', "reason": reason }, status: :unprocessable_entity
       return false
+    end
+    reason += 'Name is already taken;' if Player.where('first_name = ? and last_name = ?', params[:player_details]['first_name'],
+                                                                           params[:player_details]['last_name']).empty? == false
+    unless reason == ''
+      render json: { "created": 'fail', "reason": reason }, status: :unprocessable_entity
+      false
     end
   end
 
