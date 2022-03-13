@@ -35,12 +35,25 @@ class MatchesController < ApplicationController
     unless winner_registered && loser_registered
         render json: { "created": 'fail', "reason": 'One or both players are not registered' },
         status: :unprocessable_entity
-        false
+        return false
+    end
+    if (players_match_ids(params[:match_details]['winner_name'], true) && players_match_ids(params[:match_details]['loser_name'], false)) == false
+      render json: { "created": 'fail', "reason": 'IDs dont match players' },
+        status: :unprocessable_entity
+      return false
     end
   end
 
   def user_is_registered(full_name)
     !Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0],full_name.split(' ')[1]).empty?
+  end
+
+  def players_match_ids(full_name, win)
+    if win == true 
+      Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0],full_name.split(' ')[1])[0].id == params[:match_details]['winner_id'].to_i
+    else
+      Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0],full_name.split(' ')[1])[0].id == params[:match_details]['loser_id'].to_i 
+    end
   end
 
   def save_match

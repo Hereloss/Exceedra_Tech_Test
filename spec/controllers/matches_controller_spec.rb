@@ -22,7 +22,18 @@ RSpec.describe MatchesController, type: :controller do
     end
 
     it 'will return error if either player id doesnt match player' do
-
+      Player.create(first_name: 'John', last_name: 'Jones', dob: '23-09-1987', nationality: 'Scottish',
+                            rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
+      Player.create(first_name: 'Joan', last_name: 'Johnson', dob: '23-09-1987', nationality: 'Scottish',
+                           rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
+      post :create,
+           params: { match_details: { winner_id: '1', winner_name: 'Joan Johnson', loser_id: '2',
+                                      loser_name: 'John Jones' } }
+      expect(response).to have_http_status(422)
+      post :create,
+           params: { match_details: { winner_id: '1', winner_name: 'Joan Johnson', loser_id: '1',
+                                      loser_name: 'John Jones' } }
+      expect(response).to have_http_status(422)
     end
 
     it 'will record match and update scores if both players registered' do
@@ -31,7 +42,7 @@ RSpec.describe MatchesController, type: :controller do
       Player.create(first_name: 'Joan', last_name: 'Johnson', dob: '23-09-1987', nationality: 'Scottish',
                            rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
       post :create,
-           params: { match_details: { winner_id: '1', winner_name: 'John Jones', loser_id: '2',
+           params: { match_details: { winner_id: 1, winner_name: 'John Jones', loser_id: 2,
                                       loser_name: 'Joan Johnson' } }
       expect(response).to have_http_status(201)
       expect(Player.find(1).rating).to eq(880)
@@ -44,7 +55,7 @@ RSpec.describe MatchesController, type: :controller do
       Player.create(first_name: 'Joan', last_name: 'Johnson', dob: '23-09-1987', nationality: 'Scottish',
                            rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
       post :create,
-           params: { match_details: { winner_id: '1', winner_name: 'John Jones', loser_id: '2',
+           params: { match_details: { winner_id: 1, winner_name: 'John Jones', loser_id: 2,
                                       loser_name: 'Joan Johnson' } }
       expect(response.body).to include("{\"match ID\":1,\"winner name\":\"John Jones\",\"loser name\":\"Joan Johnson\",\"winner rating\":880,\"winner rank\":\"Unranked\",\"winner global ranking\":1,\"loser rating\":720,\"loser rank\":\"Unranked\",\"loser global ranking\":2,\"")
     end
