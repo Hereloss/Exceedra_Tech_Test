@@ -33,4 +33,18 @@ class Player < ApplicationRecord
     [player_rank, repeats_of_previous_rank, rating.to_i]
   end
 
+  def recalculate_player_rank
+    unless matchesplayed.to_i < 3
+      case rating.to_i
+      when (5000..9999)
+        update('rank': 'Gold')
+      when (3000..4999)
+        update('rank': 'Silver')
+      else
+        update('rank': 'Bronze')
+      end
+      update('rank': 'Supersonic Legend') if rating.to_i >= 10000
+    end
+  end
+
 end

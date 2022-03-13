@@ -17,7 +17,7 @@ class PlayersController < ApplicationController
     previous_global_rank = 0
     repeats_of_previous_rank = 0
     previous_player_score = 0
-    
+
     Player.all.order('rating DESC').each do |player_row|
       array = player_row.change_player_global_ranking(previous_global_rank, repeats_of_previous_rank , previous_player_score)
       previous_global_rank = array[0]
@@ -58,6 +58,21 @@ class PlayersController < ApplicationController
     formatted_array
   end
 
+  def blank_json
+    if params[:player_details].nil?
+      render json: { "created": 'fail', "reason": 'Blank JSON sent' },
+             status: :unprocessable_entity
+      return true
+    end
+  end
+
+  def blank_details_in_json
+    if params[:player_details]['first_name'].blank? || params[:player_details]['last_name'].blank? ||
+      params[:player_details]['nationality'].blank? || params[:player_details]['dob'].blank?
+     return true
+   end
+  end
+
   def able_to_sign_up
     reason = ""
     if incomplete_information == true
@@ -91,21 +106,6 @@ class PlayersController < ApplicationController
     else
       render json: @player.errors, status: :unprocessable_entity
     end
-  end
-
-  def blank_json
-    if params[:player_details].nil?
-      render json: { "created": 'fail', "reason": 'Blank JSON sent' },
-             status: :unprocessable_entity
-      return true
-    end
-  end
-
-  def blank_details_in_json
-    if params[:player_details]['first_name'].blank? || params[:player_details]['last_name'].blank? ||
-      params[:player_details]['nationality'].blank? || params[:player_details]['dob'].blank?
-     return true
-   end
   end
 
   def player_params

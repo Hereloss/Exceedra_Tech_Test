@@ -37,4 +37,31 @@ RSpec.describe Player, type: :model do
       expect(@player.globalranking).to eq(1)
     end
   end
+
+  context 'Calculate Player rank' do
+    it 'will recalulate its rank to unranked if not enough matches played' do
+      @player.update("matchesplayed": '1')
+      @player.update("rank": 'Unranked')
+      @player.recalculate_player_rank
+      expect(@player.rank).to eq('Unranked')
+    end
+
+    it 'will recalulate its rank to the correct rank if over 3 matches played' do
+      @player.update("rating": '500')
+      @player.recalculate_player_rank
+      expect(@player.rank).to eq('Bronze')
+      @player.update("rating": '10001')
+      @player.recalculate_player_rank
+      expect(@player.rank).to eq('Supersonic Legend')
+      @player.update("rating": '6000')
+      @player.recalculate_player_rank
+      expect(@player.rank).to eq('Gold')
+      @player.update("rating": '4000')
+      @player.recalculate_player_rank
+      expect(@player.rank).to eq('Silver')
+      @player.update("rating": '500')
+      @player.recalculate_player_rank
+      expect(@player.rank).to eq('Bronze')
+    end
+  end
 end
