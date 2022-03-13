@@ -132,10 +132,11 @@ RSpec.describe PlayersController, type: :controller do
       Player.create(first_name: 'John', last_name: 'Jones', dob: '23-09-1977', nationality: 'Scottish',
                   rating: '800', matchesplayed: '0', rank: 'Unranked', globalranking: '1')
       Player.create(first_name: 'Jonny', last_name: 'Jones', dob: '23-09-1987', nationality: 'British',
-                  rating: '1500', matchesplayed: '4', rank: 'Novice', globalranking: '2')
+                  rating: '1500', matchesplayed: '4', rank: 'Unranked', globalranking: '2')
       PlayersController.recalculate_global_rankings
       expect(Player.find(1).globalranking).to eq(2)
       expect(Player.find(2).globalranking).to eq(1)
+      expect(Player.find(2).rank).to eq("Bronze")
     end
 
   end

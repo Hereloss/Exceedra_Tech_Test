@@ -30,6 +30,7 @@ class Player < ApplicationRecord
     end
     repeats_of_previous_rank += 1 if same_as_previous_player
     update('globalranking': player_rank)
+    recalculate_player_rank
     [player_rank, repeats_of_previous_rank, rating.to_i]
   end
 
