@@ -5,9 +5,17 @@ RSpec.describe PlayersController, type: :controller do
 
   describe 'GET /players' do
 
+    before(:each) do
+      Player.create(first_name: 'John', last_name: 'Jones', dob: '23-09-1977', nationality: 'Scottish', rating: '800',
+                  matchesplayed: '0', rank: 'Unranked', globalranking: '2')
+      Player.create(first_name: 'Jonny', last_name: 'Jones', dob: '23-09-1987', nationality: 'British', rating: '1500',
+                  matchesplayed: '4', rank: 'Bronze', globalranking: '1')
+    end
+
     it 'will respond with JSON of all players if no params given' do
       get :index
-      expect(response).to have_http_status(204) 
+      expect(response).to have_http_status(302)
+      expect(response.body).to eq("[{\"current position\":\"2\",\"full name\":\"John Jones\",\"age\":44,\"nationality\":\"Scottish\",\"rank name\":\"Unranked\",\"points\":800},{\"current position\":\"1\",\"full name\":\"Jonny Jones\",\"age\":34,\"nationality\":\"British\",\"rank name\":\"Bronze\",\"points\":1500}]")
     end
 
   end
