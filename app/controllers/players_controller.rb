@@ -9,6 +9,10 @@ class PlayersController < ApplicationController
     return false if blank_json == true
     return false if able_to_sign_up == false
 
+    params[:player_details]["first_name"].capitalize!
+    params[:player_details]["last_name"].capitalize!
+    params[:player_details]["nationality"].capitalize!
+
     @player = Player.new(player_params)
 
     if @player.save
@@ -36,13 +40,18 @@ class PlayersController < ApplicationController
   private
 
   def search_players_database
-    case params[:search_type]
-    when 'points'
-      @players = Player.where('rating > ?', params[:points])
-    when 'nationality'
-      @players = Player.where('nationality == ?', params[:nationality])
-    when 'rank'
-      @players = Player.where('rank == ?', params[:rank])
+    unless params[:search_type].blank?
+      case params[:search_type].downcase
+      when 'points'
+        @players = Player.where('rating > ?', params[:points])
+      when 'nationality'
+        @players = Player.where('nationality == ?', params[:nationality].capitalize)
+      when 'rank'
+        @players = Player.where('rank == ?', params[:rank].capitalize)
+      else
+        @players = Player.all
+        @type = 'all'
+      end
     else
       @players = Player.all
       @type = 'all'

@@ -45,14 +45,14 @@ class MatchesController < ApplicationController
   end
 
   def user_is_registered(full_name)
-    !Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0],full_name.split(' ')[1]).empty?
+    !Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0].capitalize,full_name.split(' ')[1].capitalize).empty?
   end
 
   def players_match_ids(full_name, win)
     if win == true 
-      Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0],full_name.split(' ')[1])[0].id == params[:match_details]['winner_id'].to_i
+      Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0].capitalize,full_name.split(' ')[1].capitalize)[0].id == params[:match_details]['winner_id'].to_i
     else
-      Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0],full_name.split(' ')[1])[0].id == params[:match_details]['loser_id'].to_i 
+      Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0].capitalize,full_name.split(' ')[1].capitalize)[0].id == params[:match_details]['loser_id'].to_i 
     end
   end
 
@@ -65,8 +65,8 @@ class MatchesController < ApplicationController
   def find_players
     winner_full_name = params[:match_details]['winner_name'].split(" ")
     loser_full_name = params[:match_details]['loser_name'].split(" ")
-    @winner = Player.find_by(first_name: winner_full_name[0], last_name: winner_full_name[1])
-    @loser = Player.find_by(first_name: loser_full_name[0], last_name: loser_full_name[1])
+    @winner = Player.find_by(first_name: winner_full_name[0].capitalize, last_name: winner_full_name[1].capitalize)
+    @loser = Player.find_by(first_name: loser_full_name[0].capitalize, last_name: loser_full_name[1].capitalize)
   end
 
   def match_params
