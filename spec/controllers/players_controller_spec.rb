@@ -12,7 +12,7 @@ RSpec.describe PlayersController, type: :controller do
 
   end
 
-  describe 'POST /' do
+  describe 'POST /players' do
     it 'should respond to a post request and will return error if no JSON given' do
       post :create
       expect(response).to have_http_status(422)
@@ -75,7 +75,6 @@ RSpec.describe PlayersController, type: :controller do
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
                                      nationality: 'Bobonite' } }
       expect(response).to have_http_status(201)
-      p response.body
       expect(response.body).to eq("{\"current position\":null,\"full name\":\"Jonny Jones\",\"age\":25,\"nationality\":\"Bobonite\",\"rank name\":\"Unranked\",\"points\":1200}")
     end
 
