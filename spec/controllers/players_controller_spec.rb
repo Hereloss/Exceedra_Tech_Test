@@ -36,6 +36,16 @@ RSpec.describe PlayersController, type: :controller do
       expect(response).to have_http_status(422)
     end
 
+    it 'will return specific error if registering player with same name already registered' do
+      Player.create(first_name: 'Jonny', last_name: 'Jones', dob: '23-09-1987', nationality: 'British', rating: '1500',
+                  matchesplayed: '4', rank: 'Novice', globalranking: '1')
+      post :create,
+           params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
+                                     nationality: 'Bobonite' } }
+      expect(response).to have_http_status(422)
+      expect(response.body).to include('Name is already taken')
+    end
+
     it 'will register a player if no error raised' do
       post :create,
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
