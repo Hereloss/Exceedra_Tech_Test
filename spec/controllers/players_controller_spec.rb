@@ -15,8 +15,13 @@ RSpec.describe PlayersController, type: :controller do
     it 'will respond with JSON of all players if no params given' do
       get :index
       expect(response).to have_http_status(302)
-      p response.body
       expect(response.body).to eq("[{\"current position\":2,\"full name\":\"John Jones\",\"age\":44,\"nationality\":\"Scottish\",\"rank name\":\"Unranked\",\"points\":800},{\"current position\":1,\"full name\":\"Jonny Jones\",\"age\":34,\"nationality\":\"British\",\"rank name\":\"Bronze\",\"points\":1500}]")
+    end
+
+    it 'will return filtered by rank if search type is rank' do
+      get :index, params: { search_type: 'rank', rank: 'Unranked' }
+      expect(response.body).to include('John', 'Jones', 'Scottish', '800', 'Unranked', '2')
+      expect(response.body).not_to include('Jonny', 'British', '1500', 'Bronze')
     end
 
   end
