@@ -62,6 +62,22 @@ RSpec.describe PlayersController, type: :controller do
       expect(response.body).to include('Jonny', 'Jones', '23-12-1996', 'Bobonite')
     end
 
+    it 'will register a player and set their values to default even if given' do
+      post :create,
+           params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996', nationality: 'Bob',
+                                     rating: '1800', rank: 'GM' } }
+      expect(response).to have_http_status(201)
+      expect(response.body).to include('Jonny', 'Jones', '25', 'Bob', '800', 'Unranked')
+    end
+
+    it 'will return the correctly formatted JSON after registering' do
+      post :create,
+           params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
+                                     nationality: 'Bobonite' } }
+      expect(response).to have_http_status(201)
+      expect(response.body).to include('Jonny', 'Jones', '23-12-1996', 'Bobonite')
+    end
+
   end
 
 end

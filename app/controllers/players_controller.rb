@@ -15,14 +15,13 @@ class PlayersController < ApplicationController
   def unable_to_sign_up
     reason = ""
     if incomplete_information == true
-      reason += 'Missing or incorrect sign up information;'
-      render json: { "created": 'fail', "reason": reason }, status: :unprocessable_entity
+      render json: { "created": 'fail', "reason": "Missing or incorrect sign up information;" }, status: :unprocessable_entity
       return false
     end
     reason += 'Name is already taken;' if Player.where('first_name = ? and last_name = ?', params[:player_details]['first_name'],
                                                                            params[:player_details]['last_name']).empty? == false
     reason += 'Under age limit;' if (2022 - (params[:player_details]['dob'].split('-')[2]).to_i) < 16
-    unless reason == ''
+    unless reason == ""
       render json: { "created": 'fail', "reason": reason }, status: :unprocessable_entity
       false
     end
