@@ -15,7 +15,8 @@ RSpec.describe PlayersController, type: :controller do
     it 'will respond with JSON of all players if no params given' do
       get :index
       expect(response).to have_http_status(302)
-      expect(response.body).to eq("[{\"current position\":\"2\",\"full name\":\"John Jones\",\"age\":44,\"nationality\":\"Scottish\",\"rank name\":\"Unranked\",\"points\":800},{\"current position\":\"1\",\"full name\":\"Jonny Jones\",\"age\":34,\"nationality\":\"British\",\"rank name\":\"Bronze\",\"points\":1500}]")
+      p response.body
+      expect(response.body).to eq("[{\"current position\":2,\"full name\":\"John Jones\",\"age\":44,\"nationality\":\"Scottish\",\"rank name\":\"Unranked\",\"points\":800},{\"current position\":1,\"full name\":\"Jonny Jones\",\"age\":34,\"nationality\":\"British\",\"rank name\":\"Bronze\",\"points\":1500}]")
     end
 
   end

@@ -1,7 +1,7 @@
 class PlayersController < ApplicationController
   def index
     @players = Player.all
-    render json: @players, status: :found
+    render json: format, status: :found
   end
 
   def create
@@ -13,6 +13,14 @@ class PlayersController < ApplicationController
   end
 
   private
+
+  def format
+    formatted_array = []
+    @players.each do |player|
+      formatted_array << player.player_format
+    end
+    formatted_array
+  end
 
   def unable_to_sign_up
     reason = ""
