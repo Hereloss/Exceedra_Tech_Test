@@ -21,17 +21,19 @@ class MatchesController < ApplicationController
       return false
     end
 
-    @winner_full_name = params[:match_details]['winner_name'].split(' ')
-    @loser_full_name = params[:match_details]['loser_name'].split(' ')
+    winner_registered = user_is_registered(params[:match_details]['winner_name'])
+    loser_registered = user_is_registered(params[:match_details]['loser_name'])
 
-    if (Player.where('first_name = ? and last_name = ?', @winner_full_name[0],
-        @winner_full_name[1]).empty? == true) || (Player.where('first_name = ? and last_name = ?', @loser_full_name[0],
-                                                           @loser_full_name[1]).empty? == true)
+    unless winner_registered && loser_registered
         render json: { "created": 'fail', "reason": 'One or both players are not registered' },
         status: :unprocessable_entity
         false
     end
 
+  end
+
+  def user_is_registered(full_name)
+    !Player.where('first_name = ? and last_name = ?', full_name.split(' ')[0],full_name.split(' ')[1]).empty?
   end
 
 
