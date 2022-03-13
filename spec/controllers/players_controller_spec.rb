@@ -46,6 +46,14 @@ RSpec.describe PlayersController, type: :controller do
       expect(response.body).to include('Name is already taken')
     end
 
+    it 'will return specific error if registering player under age of 16' do
+      post :create,
+           params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-2016',
+                                     nationality: 'Bobonite' } }
+      expect(response).to have_http_status(422)
+      expect(response.body).to include('Under age limit')
+    end
+
     it 'will register a player if no error raised' do
       post :create,
            params: { player_details: { first_name: 'Jonny', last_name: 'Jones', dob: '23-12-1996',
